@@ -1,0 +1,26 @@
+﻿<%@ Register Name="tmp_cacheIServices" Template="E:/MINE/TMP/MVC/Cache/tmp_cacheIServices.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="tmp_cacheServices" Template="E:/MINE/TMP/MVC/Cache/tmp_cacheServices.cst" MergeProperties="False" ExcludeProperties="" %>
+
+<%@ Register Name="tmp_logicIServices" Template="E:/MINE/TMP/MVC/Logic/tmp_logicIServices.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="tmp_logicServices" Template="E:/MINE/TMP/MVC/Logic/tmp_logicServices.cst" MergeProperties="False" ExcludeProperties="" %>
+
+<%@ Template Language="C#" TargetLanguage="C#" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Property Name="SourceDataBase" Type="DatabaseSchema" %>
+
+<%
+    CodeTemplate tmp_cacheIServices = new tmp_cacheIServices();
+    tmp_cacheIServices.SetProperty("SourceDataBase",SourceDataBase);
+    tmp_cacheIServices.RenderToFile("E:/MINE/RESULT/Cache/IServices.cs",true);
+    CodeTemplate tmp_cacheServices = new tmp_cacheServices();
+    tmp_cacheServices.SetProperty("SourceDataBase",SourceDataBase);
+    tmp_cacheServices.RenderToFile("E:/MINE/RESULT/Cache/Services.cs",true);
+
+    CodeTemplate tmp_logicIServices = new tmp_logicIServices();
+    tmp_logicIServices.SetProperty("SourceDataBase",SourceDataBase);
+    tmp_logicIServices.RenderToFile("E:/MINE/RESULT/Logic/IServices.cs",true);
+    CodeTemplate tmp_logicServices = new tmp_logicServices();
+    tmp_logicServices.SetProperty("SourceDataBase",SourceDataBase);
+    tmp_logicServices.RenderToFile("E:/MINE/RESULT/Logic/Services.cs",true);
+%>

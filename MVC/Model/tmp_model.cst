@@ -1,0 +1,144 @@
+﻿<%@ Template Language="C#" TargetLanguage="C#" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Property Name="SourceTable" Type="TableSchema" %>
+//------------------------------------------------------------------------------
+//Description: <%=SourceTable.Name %>实体
+//Author: WANGYX
+//Date: <%=DateTime.Now %>
+//------------------------------------------------------------------------------
+using System;
+using System.Data;
+
+namespace EntityLib
+{
+    [Serializable]
+    public partial class <%=SourceTable.Name %> : EntityBase<<%=SourceTable.Name %>>
+    {
+        <script runat="template">
+        private string ToCamel(string s)
+        {
+         return s.Substring(0,1).ToLower()+s.Substring(1);
+        } 
+        
+        private string GetCSharpType(ColumnSchema column){
+            switch (column.DataType)
+        	{
+                case DbType.AnsiString: return "string";
+                case DbType.AnsiStringFixedLength: return "string";
+                case DbType.Binary: return "byte[]";
+                case DbType.Boolean: return "bool";
+                case DbType.Byte: return "byte";
+                case DbType.Currency: return "decimal";
+                case DbType.Date: return "DateTime";
+                case DbType.DateTime: return "DateTime";
+                case DbType.Decimal: return "decimal";
+                case DbType.Double: return "double";
+                case DbType.Guid: return "Guid";
+                case DbType.Int16: return "short";
+                case DbType.Int32: return "int";
+                case DbType.Int64: return "long";
+                case DbType.Object: return "object";
+                case DbType.SByte: return "sbyte";
+                case DbType.Single: return "float";
+                case DbType.String: return "string";
+                case DbType.StringFixedLength: return "string";
+                case DbType.Time: return "TimeSpan";
+                case DbType.UInt16: return "ushort";
+                case DbType.UInt32: return "uint";
+                case DbType.UInt64: return "ulong";
+                case DbType.VarNumeric: return "decimal";
+        		default: return "";
+        	}
+        }
+        </script>
+        #region 私有属性
+        <%foreach(ColumnSchema column in SourceTable.Columns){%>
+        <%if(!string.IsNullOrEmpty(column.Description)){ %>
+        ///<summary>
+		///<%=column.Description %>
+		///</summary>
+        <%} %>
+        private <%=GetCSharpType(column) %> _<%=ToCamel(column.Name) %>;
+        <%} %>
+        #endregion
+        
+        #region 共有属性
+        <%foreach(ColumnSchema column in SourceTable.Columns){ %>
+        <%if(!string.IsNullOrEmpty(column.Description)){ %>
+        ///<summary>
+		///<%=column.Description %>
+		///</summary>
+        <%} %>
+        public virtual <%=GetCSharpType(column) %> <%=column.Name %>
+		{
+			get { return _<%=ToCamel(column.Name) %>; }
+			set { _<%=ToCamel(column.Name) %> = value; }
+		}
+        <%} %>
+        #endregion
+        
+        #region 构造函数
+        ///<summary>
+        ///<%=SourceTable.Name %>构造函数
+        ///</summary>
+        public <%=SourceTable.Name %>()
+		{
+            CustomConstructor();
+        }
+        
+        ///<summary>
+        ///<%=SourceTable.Name %>构造函数
+        ///</summary>
+        public <%=SourceTable.Name %>(
+        <%int i=0;foreach(ColumnSchema column in SourceTable.Columns){%>
+          <%=GetCSharpType(column) %> <%=ToCamel(column.Name) %><%i++; %><%if(i!=SourceTable.Columns.Count){%><%="," %><%}%>
+        <%} %>
+        )
+		{
+            <%foreach(ColumnSchema column in SourceTable.Columns){ %>
+            <%=column.Name %> = <%=ToCamel(column.Name) %>;
+            <%} %>
+            CustomConstructor();
+        }
+        
+        /// <summary>
+        /// <%=SourceTable.Name %>构造函数
+        /// </summary>
+        /// <param name="dataRow">数据源</param>
+        public <%=SourceTable.Name %>(DataRow dataRow){
+            LoadData(dataRow);
+            CustomConstructor(dataRow);
+        }
+        
+        /// <summary>
+        /// 部分类无参构造函数默认调用方法
+        /// </summary>
+        partial void CustomConstructor();
+        
+        /// <summary>
+        /// 部分类包含参数dataRow的构造函数默认调用方法
+        /// </summary>
+        /// <param name="dataRow"></param>
+        partial void CustomConstructor(DataRow dataRow);
+        
+        /// <summary>
+        /// 从一行数据中加载数据
+        /// </summary>
+        /// <param name="dataRow">数据源</param>
+        /// <returns>实体本身</returns>
+        public override sealed <%=SourceTable.Name %> LoadData(DataRow dataRow)
+        {
+            if (dataRow != null)
+            {
+                <%foreach(ColumnSchema column in SourceTable.Columns){ %>
+                if (dataRow.Table.Columns.Contains("<%=column.Name %>") && dataRow["<%=column.Name %>"] != DBNull.Value && dataRow["<%=column.Name %>"] != null)
+                    _<%=ToCamel(column.Name) %> = (<%=GetCSharpType(column) %>)dataRow["<%=column.Name %>"];
+                <%} %>
+                CustomConstructor(dataRow);
+            }
+            return this;
+        }
+        #endregion
+    }
+}

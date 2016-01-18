@@ -1,0 +1,31 @@
+﻿<%@ Template Language="C#" TargetLanguage="C#" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Property Name="SourceDataBase" Type="DatabaseSchema" %>
+//------------------------------------------------------------------------------
+//Description: 缓存服务总接口
+//Author: WANGYX
+//Date: <%=DateTime.Now %>
+//------------------------------------------------------------------------------
+
+namespace CacheSrvInterfaceLib
+{
+    public interface IServices
+    {
+        #region 服务实现实例
+        <%
+        foreach(TableSchema table in SourceDataBase.Tables){ 
+            if(!table.Name.Equals("Sys_Tables")){
+        %>
+        /// <summary>
+        /// <%=table.Name %>表缓存接口
+        /// </summary>
+        I<%=table.Name %>Service <%=table.Name %>Service { get; }
+        <%}} %>
+        #endregion
+        
+        #region 自定义服务接口
+        
+        #endregion
+    }
+}

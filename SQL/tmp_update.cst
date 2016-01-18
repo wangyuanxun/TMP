@@ -1,0 +1,61 @@
+﻿<%@ Template Language="C#" TargetLanguage="SQL" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Property Name="SourceTable" Type="TableSchema" %>
+/*
+=======================================================
+存储过程名称：[dbo].[usp_<%=SourceTable.Name %>_Update]
+编写者：WANGYX
+编写时间：<%=DateTime.Now %>
+作用描述：对表<%=SourceTable.Name %>进行更新操作。
+------------------------------------------------------
+修改者：
+修改时间：
+修改描述：
+=======================================================
+*/
+<script runat="template">
+private string getSQLType(ColumnSchema column){
+    switch (column.DataType)
+	{
+        case DbType.AnsiString: return "nvarchar("+column.Size+")";
+        case DbType.AnsiStringFixedLength: return "nvarchar("+column.Size+")";
+        case DbType.Byte: return "tinyint";
+        case DbType.Currency: return "decimal";
+        case DbType.Date: return "DateTime";
+        case DbType.DateTime: return "DateTime";
+        case DbType.Decimal: return "decimal";
+        case DbType.Double: return "double";
+        case DbType.Int16: return "short";
+        case DbType.Int32: return "int";
+        case DbType.Int64: return "bigint";
+        case DbType.Single: return "float";
+        case DbType.String: return "nvarchar("+column.Size+")";
+        case DbType.StringFixedLength: return "nvarchar("+column.Size+")";
+        case DbType.VarNumeric: return "decimal";
+		default: return column.DataType.ToString();
+	}
+}
+</script>
+ALTER PROCEDURE [dbo].[usp_<%=SourceTable.Name %>_Update]
+    <%
+    int i=0;
+    foreach(ColumnSchema column in SourceTable.Columns)
+    {
+        i++;
+    %>
+	@<%=column.Name %> <%=getSQLType(column) %>=null<%if(i!=SourceTable.Columns.Count){ %>,<%} %>
+    <%} %>
+AS
+UPDATE [<%=SourceTable.Name %>] SET
+    <%
+    i=0;
+    foreach(ColumnSchema column in SourceTable.Columns)
+    {
+        i++;
+        if(!column.Name.ToUpper().Equals("ID")){
+    %>
+	[<%=column.Name %>] = @<%=column.Name %><%if(i!=SourceTable.Columns.Count){ %>,<%} %>
+    <%}} %>
+WHERE 
+	[ID] = @ID

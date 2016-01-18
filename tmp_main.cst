@@ -1,0 +1,67 @@
+﻿<%@ Register Name="tmp_model" Template="E:/MINE/TMP/MVC/Model/tmp_model.cst" MergeProperties="False" ExcludeProperties="" %>
+
+<%@ Register Name="tmp_cacheBll" Template="E:/MINE/TMP/MVC/Cache/tmp_cacheBll.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="tmp_cacheDal" Template="E:/MINE/TMP/MVC/Cache/tmp_cacheDal.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="tmp_cacheInterface" Template="E:/MINE/TMP/MVC/Cache/tmp_cacheInterface.cst" MergeProperties="False" ExcludeProperties="" %>
+
+<%@ Register Name="tmp_logicBll" Template="E:/MINE/TMP/MVC/Logic/tmp_logicBll.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="tmp_logicDal" Template="E:/MINE/TMP/MVC/Logic/tmp_logicDal.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="tmp_logicInterface" Template="E:/MINE/TMP/MVC/Logic/tmp_logicInterface.cst" MergeProperties="False" ExcludeProperties="" %>
+
+<%@ Register Name="tmp_sqlDelete" Template="E:/MINE/TMP/SQL/tmp_delete.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="tmp_sqlDeleteDynamic" Template="E:/MINE/TMP/SQL/tmp_deleteDynamic.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="tmp_sqlInsert" Template="E:/MINE/TMP/SQL/tmp_insert.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="tmp_sqlUpdate" Template="E:/MINE/TMP/SQL/tmp_update.cst" MergeProperties="False" ExcludeProperties="" %>
+
+<%@ Register Name="tmp_sql" Template="E:/MINE/TMP/SQL/tmp_sql.cst" MergeProperties="False" ExcludeProperties="" %>
+
+<%@ Template Language="C#" TargetLanguage="C#" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Property Name="SourceDataBase" Type="DatabaseSchema" %>
+
+<%
+    foreach(TableSchema table in SourceDataBase.Tables){
+        CodeTemplate tmp_model = new tmp_model();
+        tmp_model.SetProperty("SourceTable",table);
+        tmp_model.RenderToFile("E:/MINE/RESULT/Model/"+table.Name+".cs",true);
+
+        CodeTemplate tmp_cacheBll = new tmp_cacheBll();
+        tmp_cacheBll.SetProperty("SourceTable",table);
+        tmp_cacheBll.RenderToFile("E:/MINE/RESULT/Cache/Bll"+table.Name+".cs",true);
+        CodeTemplate tmp_cacheDal = new tmp_cacheDal();
+        tmp_cacheDal.SetProperty("SourceTable",table);
+        tmp_cacheDal.RenderToFile("E:/MINE/RESULT/Cache/Dal"+table.Name+".cs",true);
+        CodeTemplate tmp_cacheInterface = new tmp_cacheInterface();
+        tmp_cacheInterface.SetProperty("SourceTable",table);
+        tmp_cacheInterface.RenderToFile("E:/MINE/RESULT/Cache/I"+table.Name+".cs",true);
+
+
+        CodeTemplate tmp_logicBll = new tmp_logicBll();
+        tmp_logicBll.SetProperty("SourceTable",table);
+        tmp_logicBll.RenderToFile("E:/MINE/RESULT/Logic/Bll"+table.Name+".cs",true);
+        CodeTemplate tmp_logicDal = new tmp_logicDal();
+        tmp_logicDal.SetProperty("SourceTable",table);
+        tmp_logicDal.RenderToFile("E:/MINE/RESULT/Logic/Dal"+table.Name+".cs",true);
+        CodeTemplate tmp_logicInterface = new tmp_logicInterface();
+        tmp_logicInterface.SetProperty("SourceTable",table);
+        tmp_logicInterface.RenderToFile("E:/MINE/RESULT/Logic/I"+table.Name+".cs",true);
+
+        //CodeTemplate tmp_sqlDelete = new tmp_sqlDelete();
+        //tmp_sqlDelete.SetProperty("SourceTable",table);
+        //tmp_sqlDelete.RenderToFile("E:/MINE/RESULT/SQL/"+table.Name+"/usp_"+table.Name+"_Delete.sql",true);
+        //CodeTemplate tmp_sqlDeleteDynamic = new tmp_sqlDeleteDynamic();
+        //tmp_sqlDeleteDynamic.SetProperty("SourceTable",table);
+        //tmp_sqlDeleteDynamic.RenderToFile("E:/MINE/RESULT/SQL/"+table.Name+"/usp_"+table.Name+"_DeleteDynamic.sql",true);
+        //CodeTemplate tmp_sqlInsert = new tmp_sqlInsert();
+        //tmp_sqlInsert.SetProperty("SourceTable",table);
+        //tmp_sqlInsert.RenderToFile("E:/MINE/RESULT/SQL/"+table.Name+"/usp_"+table.Name+"_Insert.sql",true);
+        //CodeTemplate tmp_sqlUpdate = new tmp_sqlUpdate();
+        //tmp_sqlUpdate.SetProperty("SourceTable",table);
+        //tmp_sqlUpdate.RenderToFile("E:/MINE/RESULT/SQL/"+table.Name+"/usp_"+table.Name+"_Update.sql",true);
+        
+        CodeTemplate tmp_sql = new tmp_sql();
+        tmp_sql.SetProperty("SourceTable",table);
+        tmp_sql.RenderToFile("E:/MINE/RESULT/SQL/usp_"+table.Name+"_sql.sql",true);
+    }
+%>

@@ -1,0 +1,22 @@
+﻿<%@ Template Language="C#" TargetLanguage="SQL" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Property Name="SourceTable" Type="TableSchema" %>
+/*
+=======================================================
+存储过程名称：[dbo].[usp_<%=SourceTable.Name %>_Delete]
+编写者：WANGYX
+编写时间：<%=DateTime.Now %>
+作用描述：对表<%=SourceTable.Name %>进行删除操作。
+------------------------------------------------------
+修改者：
+修改时间：
+修改描述：
+=======================================================
+*/
+ALTER PROCEDURE [dbo].[usp_<%=SourceTable.Name %>_Delete]
+	@ID bigint=null
+AS
+DELETE FROM [<%=SourceTable.Name %>]
+WHERE 
+[ID] = @ID

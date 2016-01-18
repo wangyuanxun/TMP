@@ -1,0 +1,46 @@
+﻿<%@ Template Language="C#" TargetLanguage="C#" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Property Name="SourceDataBase" Type="DatabaseSchema" %>
+//------------------------------------------------------------------------------
+//Description: 逻辑服务总接口实现
+//Author: WANGYX
+//Date: <%=DateTime.Now %>
+//------------------------------------------------------------------------------
+using System;
+using LogicSrvInterfaceLib;
+using CommonLib;
+
+namespace LogicSrvLib
+{
+    public class Services : MarshalByRefObject, IServices
+    {
+        private static readonly ServiceLog SLog;
+        public static ServiceLog Log
+        {
+            get { return SLog; }
+        }
+        static Services()
+        {
+            SLog = new ServiceLog("逻辑服务", "逻辑服务");
+        }
+        #region 服务实现实例
+        <%
+        foreach(TableSchema table in SourceDataBase.Tables){ 
+            if(!table.Name.Equals("Sys_Tables")){
+        %>
+        /// <summary>
+        /// <%=table.Name %>表缓存接口
+        /// </summary>
+        public I<%=table.Name %>Service <%=table.Name %>Service
+        {
+            get { return LogicSrvLib.<%=table.Name %>Service.Instance; }
+        } 
+        <%}} %>
+        #endregion
+        
+        #region 自定义服务接口
+        
+        #endregion
+    }
+}
