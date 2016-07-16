@@ -3,30 +3,30 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Property Name="SourceTable" Type="TableSchema" %>
 //------------------------------------------------------------------------------
-//Description: <%=SourceTable.Name %>服务接口实现BLL
+//Description: <%=SourceTable.Name.Replace("_","") %>服务接口实现BLL
 //Author: WANGYX
 //Date: <%=DateTime.Now %>
 //------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using CacheSrvInterfaceLib;
-using CacheSrvLib.DAL;
-using EntityLib;
+using CacheInterface;
+using CacheImplement.DAL;
+using EP.Entity;
 
-namespace CacheSrvLib
+namespace CacheImplement
 {
-    public class <%=SourceTable.Name %>Service : MarshalByRefObject, I<%=SourceTable.Name %>Service
+    public partial class <%=SourceTable.Name.Replace("_","") %>Service : MarshalByRefObject, I<%=SourceTable.Name.Replace("_","").Replace("_","") %>Service
     {
         #region 服务实现实例
         /// <summary>
         /// 实例
         /// </summary>
-        private static <%=SourceTable.Name %>Service instance;
+        private static <%=SourceTable.Name.Replace("_","") %>Service instance;
         
         /// <summary>
         /// 实例
         /// </summary>
-        public static <%=SourceTable.Name %>Service Instance
+        public static <%=SourceTable.Name.Replace("_","") %>Service Instance
         {
             get { return instance; }
         }
@@ -34,15 +34,15 @@ namespace CacheSrvLib
         /// <summary>
         /// 静态构造方法生成单实例
         /// </summary>
-        static <%=SourceTable.Name %>Service()
+        static <%=SourceTable.Name.Replace("_","") %>Service()
         {
-            instance = new <%=SourceTable.Name %>Service();
+            instance = new <%=SourceTable.Name.Replace("_","") %>Service();
         }
         
         /// <summary>
         /// 私有构造方法
         /// </summary>
-        private <%=SourceTable.Name %>Service() { }
+        private <%=SourceTable.Name.Replace("_","") %>Service() { }
         #endregion
     
         #region 系统自动生成服务接口
@@ -52,7 +52,7 @@ namespace CacheSrvLib
         /// <returns></returns>
         public long GetMaxID()
         {
-            return Dal<%=SourceTable.Name %>.Singleton.GetMaxID();
+            return Dal<%=SourceTable.Name.Replace("_","") %>.Singleton.GetMaxID();
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace CacheSrvLib
         /// <returns></returns>
         public bool Exists(long ID)
         {
-            return Dal<%=SourceTable.Name %>.Singleton.Exists(ID);
+            return Dal<%=SourceTable.Name.Replace("_","") %>.Singleton.Exists(ID);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace CacheSrvLib
         /// <returns>是否存在记录</returns>
         public bool ExistsDynamic(string selectWhere)
         {
-            return Dal<%=SourceTable.Name %>.Singleton.ExistsDynamic(selectWhere);
+            return Dal<%=SourceTable.Name.Replace("_","") %>.Singleton.ExistsDynamic(selectWhere);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace CacheSrvLib
         /// <returns>记录数</returns>
         public int GetCount(string selectWhere)
         {
-            return Dal<%=SourceTable.Name %>.Singleton.GetCount(selectWhere);
+            return Dal<%=SourceTable.Name.Replace("_","") %>.Singleton.GetCount(selectWhere);
         }
         
         /// <summary>
@@ -91,9 +91,9 @@ namespace CacheSrvLib
         /// <param name="ID">查询编号</param>
         /// <param name="fields">查询返回字段 如果查询全部则不需要传入参数</param>
         /// <returns></returns>
-        public <%=SourceTable.Name %> GetModel(long ID, string fields = "")
+        public <%=SourceTable.Name.Replace("_","") %> GetModel(long ID, string fields = "")
         {
-            return Dal<%=SourceTable.Name %>.Singleton.GetModel(ID, fields);
+            return Dal<%=SourceTable.Name.Replace("_","") %>.Singleton.GetModel(ID, fields);
         }
 
         /// <summary>
@@ -102,9 +102,9 @@ namespace CacheSrvLib
         /// <param name="selectWhere">查询条件 不带Where</param>
         /// <param name="fields">查询返回字段 如果查询全部则不需要传入参数</param>
         /// <returns></returns>
-        public <%=SourceTable.Name %> GetModelDynamic(string selectWhere, string fields = "")
+        public <%=SourceTable.Name.Replace("_","") %> GetModelDynamic(string selectWhere, string fields = "")
         {
-            return Dal<%=SourceTable.Name %>.Singleton.GetModelDynamic(selectWhere, fields);
+            return Dal<%=SourceTable.Name.Replace("_","") %>.Singleton.GetModelDynamic(selectWhere, fields);
         }
         
         /// <summary>
@@ -115,12 +115,12 @@ namespace CacheSrvLib
         /// <param name="selectWhere">查询条件(不带Where)</param>
         /// <param name="sort">排序(不带Order By) 默认：ID DESC</param>
         /// <returns></returns>
-        public List<<%=SourceTable.Name %>> GetModelList(string fields, string topWhere = "", string selectWhere = "", string sort = "")
+        public List<<%=SourceTable.Name.Replace("_","") %>> GetModelList(string fields, string topWhere = "", string selectWhere = "", string sort = "")
         {
-            return Dal<%=SourceTable.Name %>.Singleton.GetModelList(fields, topWhere, selectWhere, sort);
+            return Dal<%=SourceTable.Name.Replace("_","") %>.Singleton.GetModelList(fields, topWhere, selectWhere, sort);
         }
         
-        //// <summary>
+        /// <summary>
         /// 分页取数据列表 返回List<T>Model
         /// </summary>
         /// <param name="pageIndex">当前页码</param>
@@ -129,14 +129,10 @@ namespace CacheSrvLib
         /// <param name="fields">查询返回字段 如果查询全部则不需要传入参数</param>
         /// <param name="sort">排序(不带Order By) 默认：ID DESC</param>
         /// <returns></returns>
-        public Page<<%=SourceTable.Name %>> GetPageList(int pageIndex, int pageSize, string selectWhere = "", string fields = "", string sort = "")
+        public Page<<%=SourceTable.Name.Replace("_","") %>> GetPageList(int pageIndex, int pageSize, string selectWhere = "", string fields = "", string sort = "")
         {
-            return Dal<%=SourceTable.Name %>.Singleton.GetPageList(pageIndex, pageSize, selectWhere, fields, sort);
+            return Dal<%=SourceTable.Name.Replace("_","") %>.Singleton.GetPageList(pageIndex, pageSize, selectWhere, fields, sort);
         }
-        #endregion
-        
-        #region 自定义服务接口
-        
         #endregion
     }
 }

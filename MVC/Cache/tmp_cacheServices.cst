@@ -8,40 +8,26 @@
 //Date: <%=DateTime.Now %>
 //------------------------------------------------------------------------------
 using System;
-using CacheSrvInterfaceLib;
-using CommonLib;
+using CacheInterface;
+using EP.Util;
 
-namespace CacheSrvLib
+namespace CacheImplement
 {
-    public class Services : MarshalByRefObject, IServices
-    {
-        private static readonly ServiceLog SLog;
-        public static ServiceLog Log
-        {
-            get { return SLog; }
-        }
-        static Services()
-        {
-            SLog = new ServiceLog("缓存服务", "缓存服务");
-        }
-        
+    public partial class Services : MarshalByRefObject, IServices
+    {       
         #region 服务实现实例
         <%
         foreach(TableSchema table in SourceDataBase.Tables){ 
             if(!table.Name.Equals("Sys_Tables")){
         %>
         /// <summary>
-        /// <%=table.Name %>表缓存接口
+        /// <%=table.Name.Replace("_","") %>表缓存接口
         /// </summary>
-        public I<%=table.Name %>Service <%=table.Name %>Service
+        public I<%=table.Name.Replace("_","") %>Service <%=table.Name.Replace("_","") %>Service
         {
-            get { return CacheSrvLib.<%=table.Name %>Service.Instance; }
+            get { return CacheImplement.<%=table.Name.Replace("_","") %>Service.Instance; }
         } 
         <%}} %>
-        #endregion
-        
-        #region 自定义服务接口
-        
         #endregion
     }
 }

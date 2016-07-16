@@ -3,18 +3,18 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Property Name="SourceTable" Type="TableSchema" %>
 //------------------------------------------------------------------------------
-//Description: <%=SourceTable.Name %>服务接口实现DAL
+//Description: <%=SourceTable.Name.Replace("_","") %>服务接口实现DAL
 //Author: WANGYX
 //Date: <%=DateTime.Now %>
 //------------------------------------------------------------------------------
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using EntityLib;
-using CommonLib;
+using EP.Entity;
+using EP.Util;
 
-namespace CacheSrvLib.DAL
+namespace CacheImplement.DAL
 {
-    public class Dal<%=SourceTable.Name %> : SingletonFactory<Dal<%=SourceTable.Name %>>
+    public partial class Dal<%=SourceTable.Name.Replace("_","") %> : SingletonFactory<Dal<%=SourceTable.Name.Replace("_","") %>>
     {
         #region 系统自动生成服务接口
         const string _fields = "<%int i=0;foreach(ColumnSchema column in SourceTable.Columns){i++;%><%=column.Name %><%if(SourceTable.Columns.Count!=i){ %>,<%} %><%} %>";
@@ -52,7 +52,7 @@ namespace CacheSrvLib.DAL
         /// <returns>是否存在记录</returns>
         public bool ExistsDynamic(string selectWhere)
         {
-            string strSQL = "SELECT COUNT(1) FROM [<%=SourceTable.Name %>] (NOLOCK) WHERE " + @selectWhere.FilterSQL();
+            string strSQL = "SELECT COUNT(1) FROM [<%=SourceTable.Name %>] (NOLOCK) WHERE " + @selectWhere;
             int result = SqlHelper.GetCount(strSQL);
             if (result > 0)
                 return true;
@@ -68,7 +68,7 @@ namespace CacheSrvLib.DAL
         public int GetCount(string selectWhere)
         {
             if (selectWhere != "") selectWhere = "WHERE " + selectWhere;
-            string strSQL = "SELECT COUNT(1) FROM [<%=SourceTable.Name %>] (NOLOCK) " + @selectWhere.FilterSQL();
+            string strSQL = "SELECT COUNT(1) FROM [<%=SourceTable.Name %>] (NOLOCK) " + @selectWhere;
             return SqlHelper.GetCount(strSQL);
         }
 
@@ -78,11 +78,11 @@ namespace CacheSrvLib.DAL
         /// <param name="ID">查询编号</param>
         /// <param name="fields">查询返回字段 如果查询全部则不需要传入参数</param>
         /// <returns></returns>
-        public <%=SourceTable.Name %> GetModel(long ID, string fields = "")
+        public <%=SourceTable.Name.Replace("_","") %> GetModel(long ID, string fields = "")
         {
             if (fields == "") fields = _fields;
-            string strSQL = "SELECT " + fields.FilterSQL() + " FROM [<%=SourceTable.Name %>](NOLOCK) WHERE ID=@ID";
-            return SqlHelper.GetEntity<<%=SourceTable.Name %>>(strSQL, new[] { new SqlParameter("@ID", ID) });
+            string strSQL = "SELECT " + fields + " FROM [<%=SourceTable.Name %>](NOLOCK) WHERE ID=@ID";
+            return SqlHelper.GetEntity<<%=SourceTable.Name.Replace("_","") %>>(strSQL, new[] { new SqlParameter("@ID", ID) });
         }
 
         /// <summary>
@@ -91,11 +91,11 @@ namespace CacheSrvLib.DAL
         /// <param name="selectWhere">查询条件 不带Where</param>
         /// <param name="fields">查询返回字段 如果查询全部则不需要传入参数</param>
         /// <returns></returns>
-        public <%=SourceTable.Name %> GetModelDynamic(string selectWhere, string fields = "")
+        public <%=SourceTable.Name.Replace("_","") %> GetModelDynamic(string selectWhere, string fields = "")
         {
             if (fields == "") fields = _fields;
-            string strSQL = "SELECT " + fields.FilterSQL() + " FROM [<%=SourceTable.Name %>](NOLOCK) WHERE " + @selectWhere.FilterSQL();
-            return SqlHelper.GetEntity<<%=SourceTable.Name %>>(strSQL);
+            string strSQL = "SELECT " + fields + " FROM [<%=SourceTable.Name %>](NOLOCK) WHERE " + @selectWhere;
+            return SqlHelper.GetEntity<<%=SourceTable.Name.Replace("_","") %>>(strSQL);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace CacheSrvLib.DAL
         /// <param name="selectWhere">查询条件(不带Where)</param>
         /// <param name="sort">排序(不带Order By) 默认：ID DESC</param>
         /// <returns></returns>
-        public List<<%=SourceTable.Name %>> GetModelList(string fields = "", string topWhere = "", string selectWhere = "", string sort = "")
+        public List<<%=SourceTable.Name.Replace("_","") %>> GetModelList(string fields = "", string topWhere = "", string selectWhere = "", string sort = "")
         {
             if (fields == "") fields = _fields;
             if (selectWhere != "") selectWhere = "WHERE " + selectWhere;
@@ -114,11 +114,11 @@ namespace CacheSrvLib.DAL
                 sort = "ORDER BY " + sort;
             else
                 sort = "ORDER BY ID DESC";
-            string strSQL = "SELECT " + topWhere.FilterSQL() + " " + fields.FilterSQL() + " FROM [<%=SourceTable.Name %>](NOLOCK) " + selectWhere.FilterSQL() + " " + sort.FilterSQL();
-            return SqlHelper.GetEntities<<%=SourceTable.Name %>>(strSQL);
+            string strSQL = "SELECT " + topWhere + " " + fields + " FROM [<%=SourceTable.Name %>](NOLOCK) " + selectWhere + " " + sort;
+            return SqlHelper.GetEntities<<%=SourceTable.Name.Replace("_","") %>>(strSQL);
         }
 
-        //// <summary>
+        /// <summary>
         /// 分页取数据列表 返回List<T>Model
         /// </summary>
         /// <param name="pageIndex">当前页码</param>
@@ -127,20 +127,16 @@ namespace CacheSrvLib.DAL
         /// <param name="fields">查询返回字段 如果查询全部则不需要传入参数</param>
         /// <param name="sort">排序(不带Order By) 默认：ID DESC</param>
         /// <returns></returns>
-        public Page<<%=SourceTable.Name %>> GetPageList(int pageIndex, int pageSize, string selectWhere = "", string fields = "", string sort = "")
+        public Page<<%=SourceTable.Name.Replace("_","") %>> GetPageList(int pageIndex, int pageSize, string selectWhere = "", string fields = "", string sort = "")
         {
             if (selectWhere != "") selectWhere = "WHERE " + selectWhere;
             if (fields == "") fields = _fields;
             if (sort == "") sort = "ID DESC";
-            string strSQL = "SELECT " + fields.FilterSQL() + " FROM [<%=SourceTable.Name %>](NOLOCK) " + selectWhere.FilterSQL();
-            strSQL = SqlHelper.GetPagingSql(strSQL, sort.FilterSQL());
-            string sqlCount = @"SELECT COUNT(1) FROM [<%=SourceTable.Name %>](NOLOCK) " + selectWhere.FilterSQL();
-            return SqlHelper.GetPage<<%=SourceTable.Name %>>(pageIndex, pageSize, strSQL, null, sqlCount, null);
+            string strSQL = "SELECT " + fields + " FROM [<%=SourceTable.Name %>](NOLOCK) " + selectWhere;
+            strSQL = SqlHelper.GetPagingSql(strSQL, sort);
+            string sqlCount = @"SELECT COUNT(1) FROM [<%=SourceTable.Name %>](NOLOCK) " + selectWhere;
+            return SqlHelper.GetPage<<%=SourceTable.Name.Replace("_","") %>>(pageIndex, pageSize, strSQL, null, sqlCount, null);
         }
-        #endregion
-        
-        #region 自定义服务接口
-        
         #endregion
     }
 }

@@ -3,16 +3,16 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Property Name="SourceTable" Type="TableSchema" %>
 //------------------------------------------------------------------------------
-//Description: <%=SourceTable.Name %>服务接口
+//Description: <%=SourceTable.Name.Replace("_","") %>服务接口
 //Author: WANGYX
 //Date: <%=DateTime.Now %>
 //------------------------------------------------------------------------------
 using System.Collections.Generic;
-using EntityLib; 
+using EP.Entity; 
 
-namespace CacheSrvInterfaceLib
+namespace CacheInterface
 {
-    public interface I<%=SourceTable.Name %>Service
+    public partial interface I<%=SourceTable.Name.Replace("_","") %>Service
     {
         #region 系统自动生成服务接口
         /// <summary>
@@ -48,7 +48,7 @@ namespace CacheSrvInterfaceLib
         /// <param name="ID">查询编号</param>
         /// <param name="fields">查询返回字段 如果查询全部则不需要传入参数</param>
         /// <returns></returns>
-        <%=SourceTable.Name %> GetModel(long ID, string fields = "");
+        <%=SourceTable.Name.Replace("_","") %> GetModel(long ID, string fields = "");
         
         /// <summary>
         /// 根据条件获取实体
@@ -56,7 +56,7 @@ namespace CacheSrvInterfaceLib
         /// <param name="selectWhere">查询条件 不带Where</param>
         /// <param name="fields">查询返回字段 如果查询全部则不需要传入参数</param>
         /// <returns></returns>
-        <%=SourceTable.Name %> GetModelDynamic(string selectWhere, string fields = "");
+        <%=SourceTable.Name.Replace("_","") %> GetModelDynamic(string selectWhere, string fields = "");
         
         /// <summary>
         /// 获得数据列表 返回List<T>
@@ -66,9 +66,9 @@ namespace CacheSrvInterfaceLib
         /// <param name="selectWhere">查询条件(不带Where)</param>
         /// <param name="sort">排序(不带Order By) 默认：ID DESC</param>
         /// <returns></returns>
-        List<<%=SourceTable.Name %>> GetModelList(string Fields, string TopWhere = "", string SelectWhere = "", string Sort = "");
+        List<<%=SourceTable.Name.Replace("_","") %>> GetModelList(string Fields, string TopWhere = "", string SelectWhere = "", string Sort = "");
         
-        //// <summary>
+        /// <summary>
         /// 分页取数据列表 返回List<T>Model
         /// </summary>
         /// <param name="selectWhere">过滤条件(不带Where)</param>
@@ -77,11 +77,7 @@ namespace CacheSrvInterfaceLib
         /// <param name="pageIndex">当前页码</param>
         /// <param name="pageSize">页在大小</param> 
         /// <returns></returns>
-        Page<<%=SourceTable.Name %>> GetPageList(int pageIndex, int pageSize, string selectWhere = "",string fields = "", string sort = "");
-        #endregion
-        
-        #region 自定义服务接口
-        
+        Page<<%=SourceTable.Name.Replace("_","") %>> GetPageList(int pageIndex, int pageSize, string selectWhere = "",string fields = "", string sort = "");
         #endregion
     }
 }
